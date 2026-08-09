@@ -56,7 +56,6 @@ Key documentation:
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) - technical architecture.
 - [docs/PLAN.md](docs/PLAN.md) - implementation plan and status.
 - [docs/TELEGRAM_LAUNCH.md](docs/TELEGRAM_LAUNCH.md) - Telegram launch guide.
-- [docs/old/](docs/old/) - archived iOS planning reference.
 
 ## Development Baseline
 

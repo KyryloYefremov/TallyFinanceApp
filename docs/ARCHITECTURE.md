@@ -9,8 +9,7 @@ This document describes how the product requirements in
 technical source of truth for stack choice, component boundaries, data flow,
 storage, authentication, and deployment.
 
-The delivery sequence is documented in [PLAN.md](PLAN.md). The archived iOS
-design remains in [old/DESIGN.md](old/DESIGN.md) for domain reference only.
+The delivery sequence is documented in [PLAN.md](PLAN.md).
 
 ## Technology Stack
 
