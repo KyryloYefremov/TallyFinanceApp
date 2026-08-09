@@ -88,7 +88,7 @@ Recommended branch: `feature/domain-models`.
 
 ## Stage 4: Telegram Authentication and Persistence
 
-Status: partial.
+Status: complete for the backend persistence foundation.
 
 Goal: persist user-owned data securely.
 
@@ -96,9 +96,9 @@ Deliverables:
 
 - [x] Add Telegram init data validation.
 - [x] Reject stale or invalid auth payloads.
-- [ ] Add database schema and migrations.
-- [ ] Add user ownership checks.
-- [ ] Add bootstrap endpoint.
+- [x] Add database schema and migrations.
+- [x] Add user ownership checks.
+- [x] Add bootstrap endpoint.
 - [x] Add API tests for auth validation.
 
 Recommended branch: `feature/telegram-auth`.

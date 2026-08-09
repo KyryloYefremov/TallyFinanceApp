@@ -38,10 +38,14 @@ The first testable MVP uses a smaller persistence path than the target
 architecture:
 
 - frontend finance data is persisted in browser `localStorage`;
-- backend exposes `/health` and `/api/session`;
+- backend exposes `/health`, `/api/session`, and `/api/bootstrap`;
 - `/api/session` validates Telegram `initData` when `TELEGRAM_BOT_TOKEN` is
   configured;
-- PostgreSQL schema and server-side finance persistence remain planned work.
+- PostgreSQL schema migration files are available in
+  `backend/src/db/migrations/`;
+- backend persistence uses a repository boundary with user ownership checks;
+- local development and tests use an in-memory repository until a deployed
+  PostgreSQL database is provisioned.
 
 This keeps the app testable locally before Telegram bot credentials, database
 provisioning, and HTTPS deployment are available.

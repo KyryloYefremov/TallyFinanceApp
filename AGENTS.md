@@ -94,8 +94,10 @@ Initialization status:
 - Git remote: `https://github.com/KyryloYefremov/TallyFinanceApp.git`.
 - Application scaffold uses TypeScript, React/Vite frontend, Node.js backend,
   and a shared domain package.
-- Finance data currently persists in browser `localStorage`; server-side
-  database persistence remains planned work.
+- Finance data currently persists in browser `localStorage`; backend Stage 4
+  includes Telegram-authenticated bootstrap, ownership checks, and PostgreSQL
+  schema migrations. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for
+  persistence details.
 
 Product and architecture docs:
 
