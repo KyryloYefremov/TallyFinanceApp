@@ -154,8 +154,25 @@ describe("financial calculations", () => {
   });
 
   it("calculates bucket spent and remaining from expenses only", () => {
-    expect(calculateBucketSpentMinor(bucket, transactions)).toBe(1_200);
-    expect(calculateBucketRemainingMinor(bucket, transactions)).toBe(3_800);
+    expect(calculateBucketSpentMinor(bucket, transactions, "CZK", rates)).toBe(1_200);
+    expect(calculateBucketRemainingMinor(bucket, transactions, "CZK", rates)).toBe(3_800);
+  });
+
+  it("converts category spending into the bucket account currency", () => {
+    const eurExpense: Transaction = {
+      id: "eur-category-expense",
+      type: "expense",
+      amountMinor: 10_000,
+      currency: "EUR",
+      sourceAccountId: "card",
+      bucketId: "food",
+      occurredAt: now,
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    expect(calculateBucketSpentMinor(bucket, [eurExpense], "CZK", rates)).toBe(250_000);
+    expect(calculateBucketRemainingMinor(bucket, [eurExpense], "CZK", rates)).toBe(-245_000);
   });
 
   it("calculates total balance in base currency", () => {
@@ -206,8 +223,79 @@ describe("transaction validation", () => {
         accounts,
         [bucket],
         rates,
+        transactions,
       ),
     ).not.toThrow();
+  });
+
+  it("rejects an expense that would overdraw the source account", () => {
+    expect(() =>
+      validateTransactionDraft(
+        {
+          type: "expense",
+          amountMinor: 20_801,
+          currency: "CZK",
+          sourceAccountId: "card",
+        },
+        accounts,
+        [bucket],
+        rates,
+        transactions,
+      ),
+    ).toThrow("Insufficient account balance");
+  });
+
+  it("rejects a converted-currency expense that would overdraw the source account", () => {
+    expect(() =>
+      validateTransactionDraft(
+        {
+          type: "expense",
+          amountMinor: 833,
+          currency: "EUR",
+          sourceAccountId: "card",
+        },
+        accounts,
+        [bucket],
+        rates,
+        transactions,
+      ),
+    ).toThrow("Insufficient account balance");
+  });
+
+  it("allows a transfer for the exact available source account balance", () => {
+    expect(() =>
+      validateTransactionDraft(
+        {
+          type: "transfer",
+          amountMinor: 11_000,
+          currency: "CZK",
+          sourceAccountId: "cash",
+          destinationAccountId: "card",
+        },
+        accounts,
+        [bucket],
+        rates,
+        transactions,
+      ),
+    ).not.toThrow();
+  });
+
+  it("rejects a transfer that would overdraw the source account", () => {
+    expect(() =>
+      validateTransactionDraft(
+        {
+          type: "transfer",
+          amountMinor: 11_001,
+          currency: "CZK",
+          sourceAccountId: "cash",
+          destinationAccountId: "card",
+        },
+        accounts,
+        [bucket],
+        rates,
+        transactions,
+      ),
+    ).toThrow("Insufficient account balance");
   });
 
   it("rejects a transfer to the same account", () => {
@@ -223,6 +311,7 @@ describe("transaction validation", () => {
         accounts,
         [bucket],
         rates,
+        transactions,
       ),
     ).toThrow("different");
   });
@@ -240,6 +329,7 @@ describe("transaction validation", () => {
         accounts,
         [bucket],
         rates,
+        transactions,
       ),
     ).toThrow("selected account");
   });

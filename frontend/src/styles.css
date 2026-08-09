@@ -133,6 +133,12 @@ p {
   justify-content: space-between;
 }
 
+.filterStack {
+  display: grid;
+  gap: 8px;
+  min-width: min(260px, 100%);
+}
+
 .sectionHeader h2 {
   font-size: 1.05rem;
 }
@@ -178,10 +184,15 @@ p {
 }
 
 .accountButton span,
-.dataRow span {
+.dataRow span,
+.amountStack {
   display: grid;
   gap: 3px;
   min-width: 0;
+}
+
+.amountStack {
+  justify-items: end;
 }
 
 .primaryButton,
@@ -298,9 +309,18 @@ p {
 }
 
 @media (max-width: 520px) {
+  .sectionHeader {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
   .inlineForm,
   .dataRow {
     grid-template-columns: 1fr;
+  }
+
+  .amountStack {
+    justify-items: start;
   }
 
   .dataRow button {

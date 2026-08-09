@@ -4,6 +4,7 @@ import {
   calculateBucketSpentMinor,
   formatMoney,
   type Account,
+  type Bucket,
 } from "@tally/domain";
 import type { FormEvent } from "react";
 import { useState } from "react";
@@ -96,20 +97,25 @@ export function AccountDetail({ account, store, onBack, onOpenQuickAdd }: Accoun
 
         <div className="rowList">
           {activeBuckets.map((bucket) => {
-            const spent = calculateBucketSpentMinor(bucket, store.state.transactions);
-            const remaining = calculateBucketRemainingMinor(bucket, store.state.transactions);
+            const bucketTotals = tryCalculateBucketTotals(bucket, account.currency, store);
 
             return (
               <article className="dataRow" key={bucket.id}>
                 <span>
                   <strong>{bucket.name}</strong>
-                  <small>
-                    Spent {formatMoney({ amountMinor: spent, currency: account.currency })} of{" "}
-                    {formatMoney({ amountMinor: bucket.budgetMinor, currency: account.currency })}
-                  </small>
+                  {bucketTotals.ok ? (
+                    <small>
+                      Spent {formatMoney({ amountMinor: bucketTotals.spentMinor, currency: account.currency })} of{" "}
+                      {formatMoney({ amountMinor: bucket.budgetMinor, currency: account.currency })}
+                    </small>
+                  ) : (
+                    <small>Exchange rate required for category spending.</small>
+                  )}
                 </span>
-                <span className={remaining < 0 ? "dangerText" : ""}>
-                  {formatMoney({ amountMinor: remaining, currency: account.currency })}
+                <span className={bucketTotals.ok && bucketTotals.remainingMinor < 0 ? "dangerText" : ""}>
+                  {bucketTotals.ok
+                    ? formatMoney({ amountMinor: bucketTotals.remainingMinor, currency: account.currency })
+                    : "Needs rate"}
                 </span>
                 <button
                   type="button"
@@ -170,6 +176,34 @@ export function AccountDetail({ account, store, onBack, onOpenQuickAdd }: Accoun
       </section>
     </section>
   );
+}
+
+function tryCalculateBucketTotals(
+  bucket: Bucket,
+  accountCurrency: Account["currency"],
+  store: FinanceStore,
+):
+  | Readonly<{ ok: true; spentMinor: number; remainingMinor: number }>
+  | Readonly<{ ok: false }> {
+  try {
+    return {
+      ok: true,
+      spentMinor: calculateBucketSpentMinor(
+        bucket,
+        store.state.transactions,
+        accountCurrency,
+        store.state.exchangeRates,
+      ),
+      remainingMinor: calculateBucketRemainingMinor(
+        bucket,
+        store.state.transactions,
+        accountCurrency,
+        store.state.exchangeRates,
+      ),
+    };
+  } catch {
+    return { ok: false };
+  }
 }
 
 function tryCalculateAccountBalance(
