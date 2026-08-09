@@ -105,6 +105,7 @@ Product and architecture docs:
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) - technical implementation
   architecture.
 - [docs/PLAN.md](docs/PLAN.md) - staged implementation plan.
+- [docs/TELEGRAM_LAUNCH.md](docs/TELEGRAM_LAUNCH.md) - Telegram launch guide.
 - [docs/diagrams/finance-tracker-architecture.excalidraw](docs/diagrams/finance-tracker-architecture.excalidraw)
   - architecture visualization source.
 
