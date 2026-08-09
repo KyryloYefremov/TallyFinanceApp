@@ -12,6 +12,7 @@ export function SettingsView({ store }: SettingsViewProps) {
   const [accountName, setAccountName] = useState("");
   const [accountCurrency, setAccountCurrency] = useState<CurrencyCode>("CZK");
   const [initialBalance, setInitialBalance] = useState("0");
+  const [error, setError] = useState("");
 
   function handleCreateAccount(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -20,13 +21,18 @@ export function SettingsView({ store }: SettingsViewProps) {
       return;
     }
 
-    store.createAccount({
-      name: accountName,
-      currency: accountCurrency,
-      initialBalance,
-    });
-    setAccountName("");
-    setInitialBalance("0");
+    try {
+      store.createAccount({
+        name: accountName,
+        currency: accountCurrency,
+        initialBalance,
+      });
+      setAccountName("");
+      setInitialBalance("0");
+      setError("");
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Account could not be created.");
+    }
   }
 
   return (
@@ -62,6 +68,7 @@ export function SettingsView({ store }: SettingsViewProps) {
           />
           <button type="submit">Add</button>
         </form>
+        {error ? <p className="errorText">{error}</p> : null}
 
         <div className="rowList">
           {store.state.accounts.map((account) => (
@@ -83,9 +90,15 @@ export function SettingsView({ store }: SettingsViewProps) {
               >
                 Rename
               </button>
-              <button type="button" onClick={() => store.removeAccount(account.id)}>
-                {account.isArchived ? "Archived" : "Remove"}
-              </button>
+              {account.isArchived ? (
+                <button type="button" onClick={() => store.restoreAccount(account.id)}>
+                  Restore
+                </button>
+              ) : (
+                <button type="button" onClick={() => store.removeAccount(account.id)}>
+                  Remove
+                </button>
+              )}
             </article>
           ))}
         </div>
@@ -148,4 +161,3 @@ function RateField({ fromCurrency, store }: RateFieldProps) {
     </label>
   );
 }
-

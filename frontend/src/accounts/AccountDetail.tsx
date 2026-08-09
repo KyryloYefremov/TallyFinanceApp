@@ -20,6 +20,7 @@ type AccountDetailProps = Readonly<{
 export function AccountDetail({ account, store, onBack, onOpenQuickAdd }: AccountDetailProps) {
   const [bucketName, setBucketName] = useState("");
   const [budget, setBudget] = useState("");
+  const [error, setError] = useState("");
   const buckets = store.state.buckets
     .filter((bucket) => bucket.accountId === account.id)
     .sort((left, right) => left.sortOrder - right.sortOrder);
@@ -39,10 +40,17 @@ export function AccountDetail({ account, store, onBack, onOpenQuickAdd }: Accoun
       return;
     }
 
-    store.createBucket({ accountId: account.id, name: bucketName, budget: budget || "0" });
-    setBucketName("");
-    setBudget("");
+    try {
+      store.createBucket({ accountId: account.id, name: bucketName, budget: budget || "0" });
+      setBucketName("");
+      setBudget("");
+      setError("");
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Category could not be created.");
+    }
   }
+
+  const balance = tryCalculateAccountBalance(account, store);
 
   return (
     <section className="screenStack">
@@ -54,14 +62,9 @@ export function AccountDetail({ account, store, onBack, onOpenQuickAdd }: Accoun
         <p className="eyebrow">{account.currency} account</p>
         <h2>{account.name}</h2>
         <strong className="heroAmount">
-          {formatMoney({
-            amountMinor: calculateAccountBalanceMinor(
-              account,
-              store.state.transactions,
-              store.state.exchangeRates,
-            ),
-            currency: account.currency,
-          })}
+          {balance.ok
+            ? formatMoney({ amountMinor: balance.amountMinor, currency: account.currency })
+            : "Needs rate"}
         </strong>
         <button className="primaryButton" type="button" onClick={onOpenQuickAdd}>
           Add transaction
@@ -89,6 +92,7 @@ export function AccountDetail({ account, store, onBack, onOpenQuickAdd }: Accoun
           />
           <button type="submit">Add</button>
         </form>
+        {error ? <p className="errorText">{error}</p> : null}
 
         <div className="rowList">
           {activeBuckets.map((bucket) => {
@@ -107,6 +111,17 @@ export function AccountDetail({ account, store, onBack, onOpenQuickAdd }: Accoun
                 <span className={remaining < 0 ? "dangerText" : ""}>
                   {formatMoney({ amountMinor: remaining, currency: account.currency })}
                 </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const nextName = window.prompt("Category name", bucket.name);
+                    if (nextName?.trim()) {
+                      store.updateBucketName(bucket.id, nextName);
+                    }
+                  }}
+                >
+                  Rename
+                </button>
                 <button type="button" onClick={() => store.removeBucket(bucket.id)}>
                   Archive
                 </button>
@@ -116,7 +131,19 @@ export function AccountDetail({ account, store, onBack, onOpenQuickAdd }: Accoun
         </div>
 
         {archivedBuckets.length > 0 ? (
-          <p className="mutedText">{archivedBuckets.length} archived categories kept for history.</p>
+          <div className="rowList">
+            {archivedBuckets.map((bucket) => (
+              <article className="dataRow" key={bucket.id}>
+                <span>
+                  <strong>{bucket.name}</strong>
+                  <small>Archived category kept for history</small>
+                </span>
+                <button type="button" onClick={() => store.restoreBucket(bucket.id)}>
+                  Restore
+                </button>
+              </article>
+            ))}
+          </div>
         ) : null}
       </section>
 
@@ -143,4 +170,22 @@ export function AccountDetail({ account, store, onBack, onOpenQuickAdd }: Accoun
       </section>
     </section>
   );
+}
+
+function tryCalculateAccountBalance(
+  account: Account,
+  store: FinanceStore,
+): Readonly<{ ok: true; amountMinor: number }> | Readonly<{ ok: false }> {
+  try {
+    return {
+      ok: true,
+      amountMinor: calculateAccountBalanceMinor(
+        account,
+        store.state.transactions,
+        store.state.exchangeRates,
+      ),
+    };
+  } catch {
+    return { ok: false };
+  }
 }

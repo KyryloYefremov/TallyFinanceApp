@@ -43,34 +43,57 @@ export function Dashboard({ store, onOpenQuickAdd }: DashboardProps) {
           <p className="emptyText">Add an account in Settings to start tracking.</p>
         ) : (
           <div className="rowList">
-            {activeAccounts.map((account) => (
-              <button
-                className="accountButton"
-                key={account.id}
-                type="button"
-                onClick={() => store.selectAccount(account.id)}
-              >
-                <span>
-                  <strong>{account.name}</strong>
-                  <small>{account.currency}</small>
-                </span>
-                <strong>
-                  {formatMoney({
-                    amountMinor: calculateAccountBalanceMinor(
-                      account,
-                      store.state.transactions,
-                      store.state.exchangeRates,
-                    ),
-                    currency: account.currency,
-                  })}
-                </strong>
-              </button>
-            ))}
+            {activeAccounts.map((account) => {
+              const balance = tryCalculateAccountBalance(store, account.id);
+
+              return (
+                <button
+                  className="accountButton"
+                  key={account.id}
+                  type="button"
+                  onClick={() => store.selectAccount(account.id)}
+                >
+                  <span>
+                    <strong>{account.name}</strong>
+                    <small>{account.currency}</small>
+                  </span>
+                  <strong>
+                    {balance.ok
+                      ? formatMoney({ amountMinor: balance.amountMinor, currency: account.currency })
+                      : "Needs rate"}
+                  </strong>
+                </button>
+              );
+            })}
           </div>
         )}
       </section>
     </section>
   );
+}
+
+function tryCalculateAccountBalance(
+  store: FinanceStore,
+  accountId: string,
+): Readonly<{ ok: true; amountMinor: number }> | Readonly<{ ok: false }> {
+  const account = store.state.accounts.find((item) => item.id === accountId);
+
+  if (!account) {
+    return { ok: false };
+  }
+
+  try {
+    return {
+      ok: true,
+      amountMinor: calculateAccountBalanceMinor(
+        account,
+        store.state.transactions,
+        store.state.exchangeRates,
+      ),
+    };
+  } catch {
+    return { ok: false };
+  }
 }
 
 function tryCalculateTotal(store: FinanceStore):

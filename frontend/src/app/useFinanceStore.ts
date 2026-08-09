@@ -20,9 +20,11 @@ export type FinanceStore = Readonly<{
   createAccount: (input: { name: string; currency: CurrencyCode; initialBalance: string }) => void;
   updateAccountName: (accountId: string, name: string) => void;
   removeAccount: (accountId: string) => void;
+  restoreAccount: (accountId: string) => void;
   createBucket: (input: { accountId: string; name: string; budget: string }) => void;
   updateBucketName: (bucketId: string, name: string) => void;
   removeBucket: (bucketId: string) => void;
+  restoreBucket: (bucketId: string) => void;
   createTransaction: (draft: TransactionDraft) => void;
   deleteTransaction: (transactionId: string) => void;
   updateBaseCurrency: (currency: CurrencyCode) => void;
@@ -91,6 +93,15 @@ export function useFinanceStore(): FinanceStore {
         };
       });
     },
+    restoreAccount(accountId) {
+      const now = new Date().toISOString();
+      setState((current) => ({
+        ...current,
+        accounts: current.accounts.map((account) =>
+          account.id === accountId ? { ...account, isArchived: false, updatedAt: now } : account,
+        ),
+      }));
+    },
     createBucket(input) {
       const account = state.accounts.find((item) => item.id === input.accountId);
 
@@ -147,6 +158,15 @@ export function useFinanceStore(): FinanceStore {
         };
       });
     },
+    restoreBucket(bucketId) {
+      const now = new Date().toISOString();
+      setState((current) => ({
+        ...current,
+        buckets: current.buckets.map((bucket) =>
+          bucket.id === bucketId ? { ...bucket, isArchived: false, updatedAt: now } : bucket,
+        ),
+      }));
+    },
     createTransaction(draft) {
       validateTransactionDraft(draft, state.accounts, state.buckets, state.exchangeRates);
 
@@ -196,15 +216,22 @@ export function useFinanceStore(): FinanceStore {
     },
     updateExchangeRate(fromCurrency, toCurrency, rateDecimalString) {
       const now = new Date().toISOString();
+      const normalizedRate = rateDecimalString.trim().replace(",", ".");
+
       setState((current) => ({
         ...current,
-        exchangeRates: upsertRate(current.exchangeRates, {
-          id: `rate-${fromCurrency.toLowerCase()}-${toCurrency.toLowerCase()}`,
-          fromCurrency,
-          toCurrency,
-          rateDecimalString: rateDecimalString.trim().replace(",", "."),
-          updatedAt: now,
-        }),
+        exchangeRates:
+          normalizedRate.length === 0
+            ? current.exchangeRates.filter(
+                (rate) => rate.fromCurrency !== fromCurrency || rate.toCurrency !== toCurrency,
+              )
+            : upsertRate(current.exchangeRates, {
+                id: `rate-${fromCurrency.toLowerCase()}-${toCurrency.toLowerCase()}`,
+                fromCurrency,
+                toCurrency,
+                rateDecimalString: normalizedRate,
+                updatedAt: now,
+              }),
       }));
     },
     resetDemoData() {
