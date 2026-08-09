@@ -254,8 +254,6 @@ export function validateTransactionDraft(
     convertMoney(createMoney(draft.amountMinor, draft.currency), sourceAccount.currency, rates);
   }
 
-  assertSourceAccountCanFundDraft(draft, sourceAccount, transactions, rates);
-
   if (draft.type === "transfer") {
     const destinationAccount = accounts.find((account) => account.id === draft.destinationAccountId);
 
@@ -275,6 +273,8 @@ export function validateTransactionDraft(
       convertMoney(createMoney(draft.amountMinor, draft.currency), destinationAccount.currency, rates);
     }
 
+    assertSourceAccountCanFundDraft(draft, sourceAccount, transactions, rates);
+
     return;
   }
 
@@ -289,6 +289,8 @@ export function validateTransactionDraft(
       throw new DomainError("Choose an active category for the selected account.");
     }
   }
+
+  assertSourceAccountCanFundDraft(draft, sourceAccount, transactions, rates);
 }
 
 function assertSourceAccountCanFundDraft(

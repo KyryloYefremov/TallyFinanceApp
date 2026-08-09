@@ -1,4 +1,4 @@
-import { convertMoney, createMoney, type Account, type Bucket, type Money, type Transaction } from "@tally/domain";
+import { convertMoney, createMoney, type Bucket, type Money, type Transaction } from "@tally/domain";
 import type { FinanceState } from "../app/createInitialState.js";
 
 export type HistoryFilters = Readonly<{
@@ -54,8 +54,4 @@ export function getTransactionDisplayMoney(
     primary,
     ...(primary.currency !== original.currency ? { original } : {}),
   };
-}
-
-export function findAccount(accounts: readonly Account[], accountId: string): Account | undefined {
-  return accounts.find((account) => account.id === accountId);
 }

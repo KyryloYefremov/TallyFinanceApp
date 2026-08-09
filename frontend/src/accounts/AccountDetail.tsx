@@ -4,6 +4,7 @@ import {
   calculateBucketSpentMinor,
   formatMoney,
   type Account,
+  type Bucket,
 } from "@tally/domain";
 import type { FormEvent } from "react";
 import { useState } from "react";
@@ -178,7 +179,7 @@ export function AccountDetail({ account, store, onBack, onOpenQuickAdd }: Accoun
 }
 
 function tryCalculateBucketTotals(
-  bucket: Parameters<typeof calculateBucketSpentMinor>[0],
+  bucket: Bucket,
   accountCurrency: Account["currency"],
   store: FinanceStore,
 ):
