@@ -1,0 +1,15 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "packages/domain"
+    },
+    {
+      "path": "backend"
+    },
+    {
+      "path": "frontend"
+    }
+  ]
+}
+

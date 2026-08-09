@@ -1,0 +1,25 @@
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --build && vite build",
+    "dev": "vite --host 0.0.0.0",
+    "preview": "vite preview",
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "@tally/domain": "0.1.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "lucide-react": "^0.539.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "vite": "^7.1.2"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7"
+  }
+}
+

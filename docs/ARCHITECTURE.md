@@ -32,6 +32,20 @@ Recommended MVP stack:
 
 The stack should stay dependency-light until the MVP workflow is proven.
 
+## Current MVP Implementation
+
+The first testable MVP uses a smaller persistence path than the target
+architecture:
+
+- frontend finance data is persisted in browser `localStorage`;
+- backend exposes `/health` and `/api/session`;
+- `/api/session` validates Telegram `initData` when `TELEGRAM_BOT_TOKEN` is
+  configured;
+- PostgreSQL schema and server-side finance persistence remain planned work.
+
+This keeps the app testable locally before Telegram bot credentials, database
+provisioning, and HTTPS deployment are available.
+
 ## System Architecture
 
 The app has four primary runtime boundaries:
@@ -131,7 +145,7 @@ Responsibilities:
 - exchange-rate conversion;
 - safe archive/delete rules.
 
-Recommended folder:
+Implemented folder:
 
 ```text
 packages/domain/

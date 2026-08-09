@@ -3,10 +3,28 @@
   "version": "0.1.0",
   "private": true,
   "description": "Telegram Mini App finance tracker.",
+  "type": "module",
   "scripts": {
-    "dev": "echo \"No app scaffold has been selected yet.\"",
-    "build": "echo \"No build command is available until the app scaffold exists.\"",
-    "test": "echo \"No tests are available until the app scaffold exists.\""
+    "dev": "concurrently \"npm run dev --workspace frontend\" \"npm run dev --workspace backend\"",
+    "build": "npm run build --workspace @tally/domain && npm run build --workspace backend && npm run build --workspace frontend",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "typecheck": "tsc --build"
+  },
+  "workspaces": [
+    "frontend",
+    "backend",
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@eslint/js": "^9.33.0",
+    "@types/node": "^24.2.1",
+    "concurrently": "^9.2.0",
+    "eslint": "^9.33.0",
+    "globals": "^16.3.0",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.39.0",
+    "vitest": "^3.2.4"
   },
   "engines": {
     "node": ">=22.0.0"

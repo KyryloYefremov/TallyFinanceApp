@@ -90,12 +90,12 @@ balances, simple reports, and Telegram Mini App delivery.
 
 Initialization status:
 
-- Repository baseline is documentation-first.
+- Repository contains the first local-testable MVP.
 - Git remote: `https://github.com/KyryloYefremov/TallyFinanceApp.git`.
-- Application scaffold is intentionally deferred until the stack is explicitly
-  selected.
-- [package.json](package.json) is currently metadata-only and does not install
-  application dependencies.
+- Application scaffold uses TypeScript, React/Vite frontend, Node.js backend,
+  and a shared domain package.
+- Finance data currently persists in browser `localStorage`; server-side
+  database persistence remains planned work.
 
 Product and architecture docs:
 

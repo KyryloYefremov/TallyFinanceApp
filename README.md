@@ -7,9 +7,16 @@ local-first data handling, simple balances, and manual currency management.
 
 ## Current State
 
-This repository is in baseline setup mode. Git and documentation scaffolding are
-being established first; the application framework has not yet been selected or
-installed.
+This repository contains the first local-testable MVP for the Telegram Mini App
+finance tracker.
+
+The MVP includes:
+
+- React/Vite Telegram Mini App frontend.
+- Node.js backend with health and Telegram session validation endpoints.
+- Shared TypeScript domain package for financial rules.
+- Browser `localStorage` persistence for the first testable finance workflow.
+- Unit tests for financial calculations and Telegram init data validation.
 
 ## Product Direction
 
@@ -21,12 +28,12 @@ The MVP is centered on:
 - manual exchange rates;
 - Telegram Mini App delivery.
 
-For the product and domain model, see [docs/old/DESIGN.md](docs/old/DESIGN.md)
-and [docs/old/PLAN.md](docs/old/PLAN.md).
+For the current product and architecture, see [docs/DESIGN.md](docs/DESIGN.md),
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), and [docs/PLAN.md](docs/PLAN.md).
 
 ## Repository Structure
 
-Expected future top-level layout:
+Top-level layout:
 
 ```text
 .
@@ -34,16 +41,18 @@ Expected future top-level layout:
 ├── README.md
 ├── frontend/
 ├── backend/
+├── packages/
 ├── docs/
-├── tests/
 └── .codex/
 ```
 
-Planned documentation:
+Key documentation:
 
 - [docs/CODING_STYLE.md](docs/CODING_STYLE.md) - code and documentation rules.
-- [docs/old/DESIGN.md](docs/old/DESIGN.md) - archived product and domain design.
-- [docs/old/PLAN.md](docs/old/PLAN.md) - staged delivery plan.
+- [docs/DESIGN.md](docs/DESIGN.md) - product design.
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) - technical architecture.
+- [docs/PLAN.md](docs/PLAN.md) - implementation plan and status.
+- [docs/old/](docs/old/) - archived iOS planning reference.
 
 ## Development Baseline
 
@@ -54,25 +63,56 @@ The first implementation steps should establish:
 1. Shared domain types for money, accounts, transactions, and currency rules.
 1. Tests for financial logic before UI polish.
 
-Exact commands will be documented once the runtime scaffold exists.
-
 ## Setup
 
 Current requirements:
 
 - Git.
-- Node.js `22+` only for project metadata scripts in [package.json](package.json).
+- Node.js `22+`.
+- npm.
 
-Current commands:
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run local development servers:
 
 ```bash
 npm run dev
-npm run build
-npm test
 ```
 
-These commands intentionally print placeholder messages until the app scaffold is
-selected.
+Default local URLs:
+
+- Frontend: `http://localhost:5173`
+- Backend: `http://localhost:3000`
+
+Verification commands:
+
+```bash
+npm test
+npm run typecheck
+npm run lint
+npm run build
+```
+
+Telegram testing requires an HTTPS tunnel and a bot configured in BotFather. The
+frontend also works outside Telegram for local testing.
+
+Backend Telegram session validation requires:
+
+```bash
+TELEGRAM_BOT_TOKEN=<bot token> npm run dev --workspace backend
+```
+
+## MVP Limitations
+
+- Finance data is stored in browser `localStorage` for the first testable MVP.
+- PostgreSQL persistence is documented in architecture but not implemented yet.
+- Telegram bot setup and deployed HTTPS hosting are not configured yet.
+- Automatic exchange rates, bank sync, charts, export, and notifications are out
+  of scope for the MVP.
 
 ## Process Notes
 

@@ -1,0 +1,309 @@
+:root {
+  --bg: var(--tg-theme-bg-color, #f6f3ed);
+  --fg: var(--tg-theme-text-color, #171717);
+  --hint: var(--tg-theme-hint-color, #6f6a61);
+  --section-bg: var(--tg-theme-section-bg-color, #fffaf2);
+  --secondary-bg: var(--tg-theme-secondary-bg-color, #ece6da);
+  --separator: var(--tg-theme-section-separator-color, rgba(23, 23, 23, 0.12));
+  --button: var(--tg-theme-button-color, #1f6f68);
+  --button-text: var(--tg-theme-button-text-color, #ffffff);
+  --danger: var(--tg-theme-destructive-text-color, #b42318);
+  --safe-top: var(--tg-safe-area-inset-top, env(safe-area-inset-top, 0px));
+  --safe-bottom: var(--tg-safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));
+
+  color: var(--fg);
+  background: var(--bg);
+  font-family: Avenir, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    linear-gradient(145deg, rgba(31, 111, 104, 0.14), transparent 34%),
+    linear-gradient(20deg, rgba(180, 35, 24, 0.08), transparent 42%),
+    var(--bg);
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button,
+select {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+input,
+select {
+  background: var(--section-bg);
+  border: 1px solid var(--separator);
+  border-radius: 8px;
+  color: var(--fg);
+  min-height: 42px;
+  padding: 10px 12px;
+  width: 100%;
+}
+
+.appShell {
+  display: grid;
+  gap: 16px;
+  margin: 0 auto;
+  max-width: 680px;
+  min-height: 100vh;
+  padding: calc(18px + var(--safe-top)) 14px calc(90px + var(--safe-bottom));
+}
+
+.appHeader {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 6px;
+}
+
+.appHeader h1,
+.heroPanel h2,
+.sectionHeader h2,
+.historyGroups h3,
+p {
+  margin: 0;
+}
+
+.appHeader h1 {
+  font-size: 1.65rem;
+  letter-spacing: 0;
+}
+
+.eyebrow {
+  color: var(--hint);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.screenStack {
+  display: grid;
+  gap: 14px;
+}
+
+.heroPanel,
+.sectionBlock,
+.quickAddSheet {
+  background: color-mix(in srgb, var(--section-bg) 92%, transparent);
+  border: 1px solid var(--separator);
+  border-radius: 8px;
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+}
+
+.heroPanel {
+  min-height: 190px;
+}
+
+.heroPanel.compact {
+  min-height: auto;
+}
+
+.heroAmount {
+  display: block;
+  font-size: clamp(2rem, 13vw, 4rem);
+  line-height: 0.95;
+}
+
+.sectionHeader {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.sectionHeader h2 {
+  font-size: 1.05rem;
+}
+
+.sectionHeader span,
+.mutedText,
+.emptyText,
+.dataRow small,
+.accountButton small {
+  color: var(--hint);
+  font-size: 0.84rem;
+}
+
+.rowList,
+.historyGroups {
+  display: grid;
+  gap: 10px;
+}
+
+.historyGroups h3 {
+  color: var(--hint);
+  font-size: 0.8rem;
+  margin: 12px 0 8px;
+  text-transform: uppercase;
+}
+
+.accountButton,
+.dataRow {
+  align-items: center;
+  background: var(--bg);
+  border: 1px solid var(--separator);
+  border-radius: 8px;
+  color: var(--fg);
+  display: grid;
+  gap: 10px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding: 12px;
+  text-align: left;
+}
+
+.dataRow {
+  grid-template-columns: minmax(0, 1fr) repeat(3, auto);
+}
+
+.accountButton span,
+.dataRow span {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.primaryButton,
+.primaryIconButton,
+.inlineForm button,
+.dataRow button,
+.sectionBlock > button {
+  background: var(--button);
+  border: 0;
+  border-radius: 8px;
+  color: var(--button-text);
+  font-weight: 800;
+  min-height: 44px;
+  padding: 10px 14px;
+}
+
+.primaryIconButton {
+  font-size: 1.55rem;
+  height: 48px;
+  line-height: 1;
+  padding: 0;
+  width: 48px;
+}
+
+.textButton {
+  background: transparent;
+  border: 0;
+  color: var(--button);
+  font-weight: 800;
+  padding: 0;
+  text-align: left;
+}
+
+.inlineForm {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: minmax(0, 1fr) minmax(88px, 0.45fr) auto;
+}
+
+.fieldLabel {
+  color: var(--hint);
+  display: grid;
+  font-size: 0.84rem;
+  font-weight: 700;
+  gap: 6px;
+}
+
+.segmentedControl,
+.bottomTabs {
+  background: var(--secondary-bg);
+  border: 1px solid var(--separator);
+  border-radius: 8px;
+  display: grid;
+  gap: 4px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 4px;
+}
+
+.segmentedControl button,
+.bottomTabs button {
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  color: var(--fg);
+  min-height: 40px;
+  padding: 8px;
+}
+
+.segmentedControl button.active,
+.bottomTabs button.active {
+  background: var(--section-bg);
+  font-weight: 800;
+}
+
+.bottomTabs {
+  bottom: max(10px, var(--safe-bottom));
+  left: 50%;
+  max-width: 680px;
+  position: fixed;
+  transform: translateX(-50%);
+  width: calc(100% - 28px);
+}
+
+.modalBackdrop {
+  align-items: end;
+  background: rgba(0, 0, 0, 0.36);
+  display: grid;
+  inset: 0;
+  padding: 12px;
+  position: fixed;
+  z-index: 10;
+}
+
+.quickAddSheet {
+  margin: 0 auto;
+  max-height: calc(100vh - 24px - var(--safe-top));
+  max-width: 680px;
+  overflow: auto;
+  padding-bottom: calc(18px + var(--safe-bottom));
+  width: 100%;
+}
+
+.warningLine,
+.errorText {
+  align-items: center;
+  color: var(--danger);
+  display: flex;
+  gap: 8px;
+  font-weight: 700;
+}
+
+.dangerText {
+  color: var(--danger);
+}
+
+@media (max-width: 520px) {
+  .inlineForm,
+  .dataRow {
+    grid-template-columns: 1fr;
+  }
+
+  .dataRow button {
+    width: 100%;
+  }
+}
