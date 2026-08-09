@@ -6,7 +6,7 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    ignores: ["**/dist/**", "coverage/**", "node_modules/**"],
+    ignores: ["**/dist/**", "**/dist-types/**", "coverage/**", "node_modules/**"],
   },
   {
     files: ["**/*.{ts,tsx}"],
@@ -22,4 +22,3 @@ export default tseslint.config(
     },
   },
 );
-
