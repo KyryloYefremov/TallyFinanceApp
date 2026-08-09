@@ -59,6 +59,20 @@ explain the reason and the remaining risk.
 Use concise imperative commit messages, for example `Add transaction validation
 service`.
 
+Development flow:
+
+1. Create a new branch for the current task.
+1. Implement the task step by step, committing each coherent subtask.
+1. Test the new functionality with the narrowest relevant command.
+1. Document the change and the tests performed.
+1. Push commits and create a pull request with a clear summary.
+1. Check the pull request automatically using
+   [.codex/prompts/pr_review.md](.codex/prompts/pr_review.md).
+1. Resolve any pending review findings, then return to pushing updates and
+   reviewing the pull request. Continue only when all findings are resolved.
+1. Merge the pull request, delete the branch, and start the next task from a new
+   branch.
+
 Pull requests should include:
 
 - Summary of changed behavior.
@@ -82,6 +96,15 @@ Initialization status:
   selected.
 - [package.json](package.json) is currently metadata-only and does not install
   application dependencies.
+
+Product and architecture docs:
+
+- [docs/DESIGN.md](docs/DESIGN.md) - business and user-facing product design.
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) - technical implementation
+  architecture.
+- [docs/PLAN.md](docs/PLAN.md) - staged implementation plan.
+- [docs/diagrams/finance-tracker-architecture.excalidraw](docs/diagrams/finance-tracker-architecture.excalidraw)
+  - architecture visualization source.
 
 ## Codex Support Files
 
