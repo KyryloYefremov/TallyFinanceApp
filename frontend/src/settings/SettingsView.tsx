@@ -1,4 +1,4 @@
-import type { CurrencyCode } from "@tally/domain";
+import type { Account, CurrencyCode } from "@tally/domain";
 import { currencyCodes } from "@tally/domain";
 import type { FormEvent } from "react";
 import { useState } from "react";
@@ -12,6 +12,8 @@ export function SettingsView({ store }: SettingsViewProps) {
   const [accountName, setAccountName] = useState("");
   const [accountCurrency, setAccountCurrency] = useState<CurrencyCode>("CZK");
   const [initialBalance, setInitialBalance] = useState("0");
+  const [editingAccountId, setEditingAccountId] = useState("");
+  const [accountRename, setAccountRename] = useState("");
   const [error, setError] = useState("");
 
   function handleCreateAccount(event: FormEvent<HTMLFormElement>) {
@@ -32,6 +34,31 @@ export function SettingsView({ store }: SettingsViewProps) {
       setError("");
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Account could not be created.");
+    }
+  }
+
+  function startAccountRename(account: Account) {
+    setEditingAccountId(account.id);
+    setAccountRename(account.name);
+    setError("");
+  }
+
+  function cancelAccountRename() {
+    setEditingAccountId("");
+    setAccountRename("");
+    setError("");
+  }
+
+  function handleRenameAccount(event: FormEvent<HTMLFormElement>, accountId: string) {
+    event.preventDefault();
+
+    try {
+      store.updateAccountName(accountId, accountRename);
+      setEditingAccountId("");
+      setAccountRename("");
+      setError("");
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Account could not be renamed.");
     }
   }
 
@@ -73,23 +100,34 @@ export function SettingsView({ store }: SettingsViewProps) {
         <div className="rowList">
           {store.state.accounts.map((account) => (
             <article className="dataRow" key={account.id}>
-              <span>
-                <strong>{account.name}</strong>
-                <small>
-                  {account.currency} {account.isArchived ? "• archived" : ""}
-                </small>
-              </span>
-              <button
-                type="button"
-                onClick={() => {
-                  const nextName = window.prompt("Account name", account.name);
-                  if (nextName?.trim()) {
-                    store.updateAccountName(account.id, nextName);
-                  }
-                }}
-              >
-                Rename
-              </button>
+              {editingAccountId === account.id ? (
+                <form className="renameForm" onSubmit={(event) => handleRenameAccount(event, account.id)}>
+                  <label className="fieldLabel">
+                    Account name
+                    <input
+                      autoFocus
+                      value={accountRename}
+                      onChange={(event) => setAccountRename(event.target.value)}
+                    />
+                  </label>
+                  <button type="submit">Save</button>
+                  <button type="button" onClick={cancelAccountRename}>
+                    Cancel
+                  </button>
+                </form>
+              ) : (
+                <>
+                  <span>
+                    <strong>{account.name}</strong>
+                    <small>
+                      {account.currency} {account.isArchived ? "• archived" : ""}
+                    </small>
+                  </span>
+                  <button type="button" onClick={() => startAccountRename(account)}>
+                    Rename
+                  </button>
+                </>
+              )}
               {account.isArchived ? (
                 <button type="button" onClick={() => store.restoreAccount(account.id)}>
                   Restore
