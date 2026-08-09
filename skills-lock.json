@@ -13,6 +13,12 @@
       "skillPath": "skills/productivity/handoff/SKILL.md",
       "computedHash": "ad03e8d4ea3cbbff66420eb7ba3cc375b5cbe1821a2449b53e863256cf5b5cde"
     },
+    "telegram-mini-app-skill": {
+      "source": "Rithprohos/telegram-mini-app-skills",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "0c0d985c59a1f9685d86a23c1bf9f56f52c59ab6d6fa5b18dc54a0b8d2a3c453"
+    },
     "web-design-guidelines": {
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",
