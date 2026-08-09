@@ -129,7 +129,13 @@ describe("history model", () => {
   });
 
   it("displays cross-currency expense amounts in the source account currency", () => {
-    expect(getTransactionDisplayMoney(transactions[0]!, state)).toEqual({
+    const [transaction] = transactions;
+
+    if (!transaction) {
+      throw new Error("Expected fixture transaction.");
+    }
+
+    expect(getTransactionDisplayMoney(transaction, state)).toEqual({
       primary: {
         amountMinor: 250_000,
         currency: "CZK",
