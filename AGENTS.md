@@ -2,9 +2,7 @@
 
 ## Project Structure & Module Organization
 
-This repository is being reset as a Telegram Mini App for personal finance
-tracking. The `docs/old/` directory contains the previous iOS product plan and
-design; use it as domain reference, not as the target architecture.
+This repository is a Telegram Mini App for personal finance tracking.
 
 Expected application layout:
 
@@ -105,6 +103,7 @@ Product and architecture docs:
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) - technical implementation
   architecture.
 - [docs/PLAN.md](docs/PLAN.md) - staged implementation plan.
+- [docs/TELEGRAM_LAUNCH.md](docs/TELEGRAM_LAUNCH.md) - Telegram launch guide.
 - [docs/diagrams/finance-tracker-architecture.excalidraw](docs/diagrams/finance-tracker-architecture.excalidraw)
   - architecture visualization source.
 
@@ -126,8 +125,6 @@ prompt standards:
   prompt experiments.
 - `docs/CODING_STYLE.md` - coding style and standards. Read it before making
   implementation changes or refactoring.
-- `docs/old/` - previous iOS planning/design archive. Use it for domain rules
-  and product context, not for current platform architecture.
 
 ## Embedded System Prompt
 
