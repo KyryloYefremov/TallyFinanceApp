@@ -13,10 +13,13 @@ finance tracker.
 The MVP includes:
 
 - React/Vite Telegram Mini App frontend.
-- Node.js backend with health and Telegram session validation endpoints.
+- Node.js backend with health, Telegram session validation, and bootstrap
+  endpoints.
 - Shared TypeScript domain package for financial rules.
 - Browser `localStorage` persistence for the first testable finance workflow.
-- Unit tests for financial calculations and Telegram init data validation.
+- PostgreSQL schema migration files for the server persistence foundation.
+- Unit tests for financial calculations, Telegram init data validation,
+  bootstrap ownership, and migration coverage.
 
 ## Product Direction
 
@@ -109,7 +112,8 @@ TELEGRAM_BOT_TOKEN=<bot token> npm run dev --workspace backend
 ## MVP Limitations
 
 - Finance data is stored in browser `localStorage` for the first testable MVP.
-- PostgreSQL persistence is documented in architecture but not implemented yet.
+- PostgreSQL schema migrations and backend repository boundaries exist, but a
+  provisioned database and frontend write-through APIs are not configured yet.
 - Telegram bot setup and deployed HTTPS hosting are not configured yet.
 - Automatic exchange rates, bank sync, charts, export, and notifications are out
   of scope for the MVP.
