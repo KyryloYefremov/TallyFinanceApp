@@ -106,40 +106,6 @@ Product and architecture docs:
 - [docs/diagrams/finance-tracker-architecture.excalidraw](docs/diagrams/finance-tracker-architecture.excalidraw)
   - architecture visualization source.
 
-Manual testing fix queue:
-
-- [ ] High: prevent expense transactions that would make the source account
-  balance negative. Source: `validateTransactionDraft` checks amount shape and
-  exchange-rate availability, but it does not compare the converted withdrawal
-  amount against the current source account balance. Branch:
-  `fix/prevent-negative-expenses`. Plan: add centralized affordability
-  validation in the domain package, call it before transaction persistence, show
-  the existing Quick Add error path, and cover with unit tests for same-currency
-  and converted-currency expenses.
-- [ ] High: prevent transfers that would make the source account balance
-  negative. Source: transfer validation verifies accounts and exchange rates,
-  but it does not reject overdrawn source accounts. Branch:
-  `fix/prevent-negative-transfers`. Plan: reuse the same centralized
-  affordability rule for transfers, keep destination conversion unchanged, and
-  test successful exact-balance transfers plus rejected over-balance transfers.
-- [ ] High: calculate and display category spending in the category account
-  currency. Source: `calculateBucketSpentMinor` currently sums raw transaction
-  amounts, so an expense recorded in EUR against a CZK category is counted as
-  CZK without conversion. Branch: `fix/convert-category-spending`. Plan: update
-  bucket spending calculation to convert each expense into the bucket account
-  currency using configured exchange rates, propagate missing-rate errors to UI,
-  and test cross-currency category spending and remaining budget.
-- [ ] Medium: add category filtering to the History panel. Source: History only
-  filters by account and renders raw transaction amounts, which makes category
-  review difficult. Branch: `feature/history-category-filter`. Plan: add a
-  category filter that works alongside the account filter, hide unavailable
-  category options when an account filter is active, display category/account
-  context clearly, and manually test all-account, account-only, category-only,
-  and combined filters.
-
-Remove each item from this queue in the same pull request that fixes and tests
-it.
-
 ## Codex Support Files
 
 Use `.codex/` as the repository-local knowledge base for Codex workflow and
