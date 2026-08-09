@@ -106,6 +106,17 @@ Product and architecture docs:
 - [docs/diagrams/finance-tracker-architecture.excalidraw](docs/diagrams/finance-tracker-architecture.excalidraw)
   - architecture visualization source.
 
+Manual testing fix queue:
+
+- [ ] Medium: fix account and category rename flows. Source: rename actions in
+  `SettingsView` and `AccountDetail` use `window.prompt`, which is unreliable in
+  Telegram WebViews and bypasses visible form validation; store rename methods
+  also accept blank trimmed names when called directly. Branch:
+  `fix/inline-renaming`. Plan: replace prompt-based renames with inline edit
+  forms, validate non-empty names in the store, surface errors in the existing
+  UI error areas, add focused tests for rename validation, and keep the styling
+  aligned with current Telegram-themed controls.
+
 ## Codex Support Files
 
 Use `.codex/` as the repository-local knowledge base for Codex workflow and
