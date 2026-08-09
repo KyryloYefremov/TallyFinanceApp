@@ -232,6 +232,14 @@ p {
   grid-template-columns: minmax(0, 1fr) minmax(88px, 0.45fr) auto;
 }
 
+.renameForm {
+  align-items: end;
+  display: grid;
+  gap: 8px;
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+}
+
 .fieldLabel {
   color: var(--hint);
   display: grid;
@@ -315,6 +323,7 @@ p {
   }
 
   .inlineForm,
+  .renameForm,
   .dataRow {
     grid-template-columns: 1fr;
   }

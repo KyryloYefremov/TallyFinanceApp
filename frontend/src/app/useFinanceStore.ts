@@ -10,6 +10,7 @@ import {
   type TransactionDraft,
 } from "@tally/domain";
 import { createInitialState, type FinanceState } from "./createInitialState.js";
+import { normalizeEntityName } from "./nameValidation.js";
 
 const storageKey = "tally-finance-state-v1";
 
@@ -46,6 +47,7 @@ export function useFinanceStore(): FinanceStore {
     selectAccount: setSelectedAccountId,
     createAccount(input) {
       const now = new Date().toISOString();
+      const name = normalizeEntityName(input.name, "Account");
       const initialBalance = parseNonNegativeMoneyInput(input.initialBalance || "0", input.currency);
 
       setState((current) => ({
@@ -54,7 +56,7 @@ export function useFinanceStore(): FinanceStore {
           ...current.accounts,
           {
             id: crypto.randomUUID(),
-            name: input.name.trim(),
+            name,
             currency: input.currency,
             initialBalanceMinor: initialBalance.amountMinor,
             isArchived: false,
@@ -66,10 +68,11 @@ export function useFinanceStore(): FinanceStore {
     },
     updateAccountName(accountId, name) {
       const now = new Date().toISOString();
+      const normalizedName = normalizeEntityName(name, "Account");
       setState((current) => ({
         ...current,
         accounts: current.accounts.map((account) =>
-          account.id === accountId ? { ...account, name: name.trim(), updatedAt: now } : account,
+          account.id === accountId ? { ...account, name: normalizedName, updatedAt: now } : account,
         ),
       }));
     },
@@ -110,6 +113,7 @@ export function useFinanceStore(): FinanceStore {
       }
 
       const now = new Date().toISOString();
+      const name = normalizeEntityName(input.name, "Category");
       const budget = parseNonNegativeMoneyInput(input.budget || "0", account.currency);
       const nextSortOrder = state.buckets.filter((bucket) => bucket.accountId === input.accountId).length;
 
@@ -120,7 +124,7 @@ export function useFinanceStore(): FinanceStore {
           {
             id: crypto.randomUUID(),
             accountId: input.accountId,
-            name: input.name.trim(),
+            name,
             budgetMinor: budget.amountMinor,
             sortOrder: nextSortOrder,
             isArchived: false,
@@ -132,10 +136,11 @@ export function useFinanceStore(): FinanceStore {
     },
     updateBucketName(bucketId, name) {
       const now = new Date().toISOString();
+      const normalizedName = normalizeEntityName(name, "Category");
       setState((current) => ({
         ...current,
         buckets: current.buckets.map((bucket) =>
-          bucket.id === bucketId ? { ...bucket, name: name.trim(), updatedAt: now } : bucket,
+          bucket.id === bucketId ? { ...bucket, name: normalizedName, updatedAt: now } : bucket,
         ),
       }));
     },

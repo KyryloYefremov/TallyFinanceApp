@@ -21,6 +21,8 @@ type AccountDetailProps = Readonly<{
 export function AccountDetail({ account, store, onBack, onOpenQuickAdd }: AccountDetailProps) {
   const [bucketName, setBucketName] = useState("");
   const [budget, setBudget] = useState("");
+  const [editingBucketId, setEditingBucketId] = useState("");
+  const [bucketRename, setBucketRename] = useState("");
   const [error, setError] = useState("");
   const buckets = store.state.buckets
     .filter((bucket) => bucket.accountId === account.id)
@@ -48,6 +50,31 @@ export function AccountDetail({ account, store, onBack, onOpenQuickAdd }: Accoun
       setError("");
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Category could not be created.");
+    }
+  }
+
+  function startBucketRename(bucket: Bucket) {
+    setEditingBucketId(bucket.id);
+    setBucketRename(bucket.name);
+    setError("");
+  }
+
+  function cancelBucketRename() {
+    setEditingBucketId("");
+    setBucketRename("");
+    setError("");
+  }
+
+  function handleRenameBucket(event: FormEvent<HTMLFormElement>, bucketId: string) {
+    event.preventDefault();
+
+    try {
+      store.updateBucketName(bucketId, bucketRename);
+      setEditingBucketId("");
+      setBucketRename("");
+      setError("");
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Category could not be renamed.");
     }
   }
 
@@ -101,33 +128,44 @@ export function AccountDetail({ account, store, onBack, onOpenQuickAdd }: Accoun
 
             return (
               <article className="dataRow" key={bucket.id}>
-                <span>
-                  <strong>{bucket.name}</strong>
-                  {bucketTotals.ok ? (
-                    <small>
-                      Spent {formatMoney({ amountMinor: bucketTotals.spentMinor, currency: account.currency })} of{" "}
-                      {formatMoney({ amountMinor: bucket.budgetMinor, currency: account.currency })}
-                    </small>
-                  ) : (
-                    <small>Exchange rate required for category spending.</small>
-                  )}
-                </span>
-                <span className={bucketTotals.ok && bucketTotals.remainingMinor < 0 ? "dangerText" : ""}>
-                  {bucketTotals.ok
-                    ? formatMoney({ amountMinor: bucketTotals.remainingMinor, currency: account.currency })
-                    : "Needs rate"}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const nextName = window.prompt("Category name", bucket.name);
-                    if (nextName?.trim()) {
-                      store.updateBucketName(bucket.id, nextName);
-                    }
-                  }}
-                >
-                  Rename
-                </button>
+                {editingBucketId === bucket.id ? (
+                  <form className="renameForm" onSubmit={(event) => handleRenameBucket(event, bucket.id)}>
+                    <label className="fieldLabel">
+                      Category name
+                      <input
+                        autoFocus
+                        value={bucketRename}
+                        onChange={(event) => setBucketRename(event.target.value)}
+                      />
+                    </label>
+                    <button type="submit">Save</button>
+                    <button type="button" onClick={cancelBucketRename}>
+                      Cancel
+                    </button>
+                  </form>
+                ) : (
+                  <>
+                    <span>
+                      <strong>{bucket.name}</strong>
+                      {bucketTotals.ok ? (
+                        <small>
+                          Spent {formatMoney({ amountMinor: bucketTotals.spentMinor, currency: account.currency })} of{" "}
+                          {formatMoney({ amountMinor: bucket.budgetMinor, currency: account.currency })}
+                        </small>
+                      ) : (
+                        <small>Exchange rate required for category spending.</small>
+                      )}
+                    </span>
+                    <span className={bucketTotals.ok && bucketTotals.remainingMinor < 0 ? "dangerText" : ""}>
+                      {bucketTotals.ok
+                        ? formatMoney({ amountMinor: bucketTotals.remainingMinor, currency: account.currency })
+                        : "Needs rate"}
+                    </span>
+                    <button type="button" onClick={() => startBucketRename(bucket)}>
+                      Rename
+                    </button>
+                  </>
+                )}
                 <button type="button" onClick={() => store.removeBucket(bucket.id)}>
                   Archive
                 </button>
