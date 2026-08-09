@@ -56,7 +56,11 @@ export function Dashboard({ store, onOpenQuickAdd }: DashboardProps) {
                 </span>
                 <strong>
                   {formatMoney({
-                    amountMinor: calculateAccountBalanceMinor(account, store.state.transactions),
+                    amountMinor: calculateAccountBalanceMinor(
+                      account,
+                      store.state.transactions,
+                      store.state.exchangeRates,
+                    ),
                     currency: account.currency,
                   })}
                 </strong>

@@ -9,6 +9,7 @@ import {
   convertMoney,
   createMoney,
   parseMoneyInput,
+  parseNonNegativeMoneyInput,
   validateTransactionDraft,
   type Account,
   type Bucket,
@@ -122,6 +123,10 @@ describe("money", () => {
     expect(parseMoneyInput("123,45", "EUR")).toEqual({ amountMinor: 12345, currency: "EUR" });
   });
 
+  it("parses zero for setup amounts", () => {
+    expect(parseNonNegativeMoneyInput("0", "CZK")).toEqual({ amountMinor: 0, currency: "CZK" });
+  });
+
   it("rejects invalid money input", () => {
     expect(() => parseMoneyInput("10.999", "CZK")).toThrow("up to 2 decimals");
   });
@@ -131,6 +136,21 @@ describe("financial calculations", () => {
   it("calculates account balances from ledger facts", () => {
     expect(calculateAccountBalanceMinor(cashAccount, transactions)).toBe(11_000);
     expect(calculateAccountBalanceMinor(cardAccount, transactions)).toBe(20_800);
+  });
+
+  it("converts transaction effects into the account currency", () => {
+    const eurExpense: Transaction = {
+      id: "eur-expense",
+      type: "expense",
+      amountMinor: 100,
+      currency: "EUR",
+      sourceAccountId: "card",
+      occurredAt: now,
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    expect(calculateAccountBalanceMinor(cardAccount, [eurExpense], rates)).toBe(17_500);
   });
 
   it("calculates bucket spent and remaining from expenses only", () => {

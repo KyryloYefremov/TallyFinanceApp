@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import {
   accountRemovalMode,
   bucketRemovalMode,
-  parseMoneyInput,
+  parseNonNegativeMoneyInput,
   validateTransactionDraft,
   type CurrencyCode,
   type ExchangeRate,
@@ -44,7 +44,7 @@ export function useFinanceStore(): FinanceStore {
     selectAccount: setSelectedAccountId,
     createAccount(input) {
       const now = new Date().toISOString();
-      const initialBalance = parseMoneyInput(input.initialBalance || "0", input.currency);
+      const initialBalance = parseNonNegativeMoneyInput(input.initialBalance || "0", input.currency);
 
       setState((current) => ({
         ...current,
@@ -99,7 +99,7 @@ export function useFinanceStore(): FinanceStore {
       }
 
       const now = new Date().toISOString();
-      const budget = parseMoneyInput(input.budget || "0", account.currency);
+      const budget = parseNonNegativeMoneyInput(input.budget || "0", account.currency);
       const nextSortOrder = state.buckets.filter((bucket) => bucket.accountId === input.accountId).length;
 
       setState((current) => ({

@@ -55,7 +55,11 @@ export function AccountDetail({ account, store, onBack, onOpenQuickAdd }: Accoun
         <h2>{account.name}</h2>
         <strong className="heroAmount">
           {formatMoney({
-            amountMinor: calculateAccountBalanceMinor(account, store.state.transactions),
+            amountMinor: calculateAccountBalanceMinor(
+              account,
+              store.state.transactions,
+              store.state.exchangeRates,
+            ),
             currency: account.currency,
           })}
         </strong>
@@ -140,4 +144,3 @@ export function AccountDetail({ account, store, onBack, onOpenQuickAdd }: Accoun
     </section>
   );
 }
-

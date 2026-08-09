@@ -92,6 +92,15 @@ export function createMoney(amountMinor: number, currency: CurrencyCode): Money 
 
 /** Parses user-entered decimal money into integer minor units. */
 export function parseMoneyInput(input: string, currency: CurrencyCode): Money {
+  return parseDecimalMoneyInput(input, currency, false);
+}
+
+/** Parses user-entered decimal money where zero is a valid value. */
+export function parseNonNegativeMoneyInput(input: string, currency: CurrencyCode): Money {
+  return parseDecimalMoneyInput(input, currency, true);
+}
+
+function parseDecimalMoneyInput(input: string, currency: CurrencyCode, allowZero: boolean): Money {
   const normalized = input.trim().replace(",", ".");
 
   if (!/^\d+(\.\d{1,2})?$/.test(normalized)) {
@@ -101,7 +110,7 @@ export function parseMoneyInput(input: string, currency: CurrencyCode): Money {
   const [majorPart = "0", minorPart = ""] = normalized.split(".");
   const amountMinor = Number.parseInt(majorPart, 10) * 100 + Number.parseInt(minorPart.padEnd(2, "0"), 10);
 
-  if (amountMinor <= 0) {
+  if (amountMinor < 0 || (!allowZero && amountMinor === 0)) {
     throw new DomainError("Amount must be greater than zero.");
   }
 
@@ -120,18 +129,31 @@ export function formatMoney(money: Money, locale = "en-US"): string {
 export function calculateAccountBalanceMinor(
   account: Account,
   transactions: readonly Transaction[],
+  rates: readonly ExchangeRate[] = [],
 ): number {
   return transactions.reduce((balance, transaction) => {
     if (transaction.sourceAccountId === account.id) {
+      const amount = convertMoney(
+        createMoney(transaction.amountMinor, transaction.currency),
+        account.currency,
+        rates,
+      ).amountMinor;
+
       if (transaction.type === "expense" || transaction.type === "transfer") {
-        return balance - transaction.amountMinor;
+        return balance - amount;
       }
 
-      return balance + transaction.amountMinor;
+      return balance + amount;
     }
 
     if (transaction.destinationAccountId === account.id && transaction.type === "transfer") {
-      return balance + transaction.amountMinor;
+      const amount = convertMoney(
+        createMoney(transaction.amountMinor, transaction.currency),
+        account.currency,
+        rates,
+      ).amountMinor;
+
+      return balance + amount;
     }
 
     return balance;
@@ -190,7 +212,7 @@ export function calculateTotalBalance(
     .filter((account) => !account.isArchived)
     .reduce((total, account) => {
       const balance = createMoney(
-        calculateAccountBalanceMinor(account, transactions),
+        calculateAccountBalanceMinor(account, transactions, rates),
         account.currency,
       );
       return total + convertMoney(balance, baseCurrency, rates).amountMinor;
@@ -325,4 +347,3 @@ function assertSafeInteger(value: number, label: string): void {
     throw new DomainError(`${label} must be a safe integer.`);
   }
 }
-
