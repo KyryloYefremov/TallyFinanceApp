@@ -1,0 +1,40 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Node / TypeScript
+node_modules/
+dist/
+build/
+coverage/
+.turbo/
+.cache/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editors
+.idea/
+.vscode/
+
+# Xcode / Swift
+DerivedData/
+xcuserdata/
+*.xcuserstate
+*.xccheckout
+*.xcscmblueprint
+Package.resolved
+
+# Temporary files
+*.swp
+*.swo
+

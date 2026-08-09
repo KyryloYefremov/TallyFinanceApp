@@ -1,0 +1,14 @@
+{
+  "name": "tally-finance-app",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Telegram Mini App finance tracker.",
+  "scripts": {
+    "dev": "echo \"No app scaffold has been selected yet.\"",
+    "build": "echo \"No build command is available until the app scaffold exists.\"",
+    "test": "echo \"No tests are available until the app scaffold exists.\""
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

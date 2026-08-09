@@ -1,0 +1,8 @@
+[task preamble]
+[input definitions]
+[high level overview]
+[detailed instructions]
+[output requirements]
+[output template]
+[examples]
+[optional context]
