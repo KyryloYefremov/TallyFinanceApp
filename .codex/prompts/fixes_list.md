@@ -13,7 +13,7 @@ Review all reported bugs from manual testing, prioritize by severity, create fea
 # Detailed Instructions
 1. Review all reported issues
 2. Organize by severity: Critical, High, Medium, Low
-3. Analyse each issue, found a source of it and plan a fix.
+3. Analyze each issue, find its source, and plan a fix.
 4. Create feature branch for each fix following git workflow
 5. Add each issue to `AGENTS.md` with status tracking
 6. Prepare implementation plan for each fix
