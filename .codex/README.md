@@ -50,6 +50,8 @@ Archived prompts that were previously used to set up Codex behavior.
 
 Current files:
 
+- [`prompts/fixes_list.md`](prompts/fixes_list.md) - template for processing
+  manual testing issues and planning fixes.
 - [`prompts/init_conversation_rules.md`](prompts/init_conversation_rules.md) -
   earlier conversation behavior prompt.
 - [`prompts/system_prompt.md`](prompts/system_prompt.md) - system prompt used
