@@ -8,8 +8,9 @@ This plan turns [DESIGN.md](DESIGN.md) and [ARCHITECTURE.md](ARCHITECTURE.md)
 into staged implementation work. Each stage should be completed in a focused
 branch with tests or documented manual checks.
 
-The repository is currently initialized as a simple documentation-first
-baseline. No application scaffold has been installed yet.
+The repository now contains the first local-testable MVP. It can be run outside
+Telegram, stores finance data in browser `localStorage`, and includes backend
+Telegram session validation.
 
 ## Delivery Principles
 
@@ -34,138 +35,156 @@ Deliverables:
 
 ## Stage 1: Stack Selection and Scaffold
 
+Status: complete for the first MVP.
+
 Goal: create the actual Telegram Mini App codebase.
 
 Deliverables:
 
-- [ ] Select final web stack.
-- [ ] Create frontend scaffold.
-- [ ] Create backend scaffold.
-- [ ] Add shared domain package or equivalent domain module.
-- [ ] Add exact `dev`, `build`, `test`, and `lint` commands.
-- [ ] Update [README.md](../README.md) with real setup instructions.
+- [x] Select final web stack.
+- [x] Create frontend scaffold.
+- [x] Create backend scaffold.
+- [x] Add shared domain package or equivalent domain module.
+- [x] Add exact `dev`, `build`, `test`, and `lint` commands.
+- [x] Update [README.md](../README.md) with real setup instructions.
 
 Recommended branch: `chore/app-scaffold`.
 
 ## Stage 2: Telegram App Shell
 
+Status: complete for local MVP, pending Telegram device verification.
+
 Goal: make the app open correctly inside Telegram and locally.
 
 Deliverables:
 
-- [ ] Load Telegram Web App SDK.
-- [ ] Call `ready()` after initial render.
-- [ ] Call `expand()` where supported.
-- [ ] Add safe-area handling.
-- [ ] Add theme variable support.
-- [ ] Add local development fallback when Telegram SDK is unavailable.
+- [x] Load Telegram Web App SDK.
+- [x] Call `ready()` after initial render.
+- [x] Call `expand()` where supported.
+- [x] Add safe-area handling.
+- [x] Add theme variable support.
+- [x] Add local development fallback when Telegram SDK is unavailable.
 
 Recommended branch: `feature/telegram-shell`.
 
 ## Stage 3: Domain Model and Financial Rules
 
+Status: complete for first MVP.
+
 Goal: establish reliable financial logic before UI polish.
 
 Deliverables:
 
-- [ ] Define currencies: `CZK`, `EUR`, `USD`.
-- [ ] Define transaction types: expense, income, transfer.
-- [ ] Define account, bucket, transaction, exchange-rate, and settings types.
-- [ ] Store money in integer minor units.
-- [ ] Add balance calculation service.
-- [ ] Add bucket spent and remaining calculation service.
-- [ ] Add manual currency conversion service.
-- [ ] Add unit tests for all financial invariants.
+- [x] Define currencies: `CZK`, `EUR`, `USD`.
+- [x] Define transaction types: expense, income, transfer.
+- [x] Define account, bucket, transaction, exchange-rate, and settings types.
+- [x] Store money in integer minor units.
+- [x] Add balance calculation service.
+- [x] Add bucket spent and remaining calculation service.
+- [x] Add manual currency conversion service.
+- [x] Add unit tests for all financial invariants.
 
 Recommended branch: `feature/domain-models`.
 
 ## Stage 4: Telegram Authentication and Persistence
 
+Status: partial.
+
 Goal: persist user-owned data securely.
 
 Deliverables:
 
-- [ ] Add Telegram init data validation.
-- [ ] Reject stale or invalid auth payloads.
+- [x] Add Telegram init data validation.
+- [x] Reject stale or invalid auth payloads.
 - [ ] Add database schema and migrations.
 - [ ] Add user ownership checks.
 - [ ] Add bootstrap endpoint.
-- [ ] Add API tests for auth and ownership.
+- [x] Add API tests for auth validation.
 
 Recommended branch: `feature/telegram-auth`.
 
 ## Stage 5: Accounts and Settings
 
+Status: complete for local MVP.
+
 Goal: let users prepare the data needed for tracking.
 
 Deliverables:
 
-- [ ] Create accounts.
-- [ ] Rename accounts.
-- [ ] Archive or delete accounts safely.
-- [ ] Set base currency.
-- [ ] Enter manual exchange rates.
-- [ ] Persist remembered defaults.
+- [x] Create accounts.
+- [x] Rename accounts.
+- [x] Archive or delete accounts safely.
+- [x] Set base currency.
+- [x] Enter manual exchange rates.
+- [x] Persist remembered defaults.
 
 Recommended branch: `feature/settings-accounts-rates`.
 
 ## Stage 6: Dashboard
 
+Status: complete for local MVP.
+
 Goal: show balances and the main entry point for transaction capture.
 
 Deliverables:
 
-- [ ] Show total balance in base currency.
-- [ ] Show active accounts and balances.
-- [ ] Handle missing exchange rates clearly.
-- [ ] Add compact empty state.
-- [ ] Add primary Quick Add entry point.
+- [x] Show total balance in base currency.
+- [x] Show active accounts and balances.
+- [x] Handle missing exchange rates clearly.
+- [x] Add compact empty state.
+- [x] Add primary Quick Add entry point.
 
 Recommended branch: `feature/dashboard`.
 
 ## Stage 7: Categories and Account Detail
 
+Status: complete for local MVP.
+
 Goal: manage account-specific spending categories.
 
 Deliverables:
 
-- [ ] Show account balance.
-- [ ] Show active categories.
-- [ ] Create and rename categories.
-- [ ] Archive or delete categories safely.
-- [ ] Show spent and remaining amounts.
-- [ ] Show recent account transactions.
+- [x] Show account balance.
+- [x] Show active categories.
+- [x] Create and rename categories.
+- [x] Archive or delete categories safely.
+- [x] Show spent and remaining amounts.
+- [x] Show recent account transactions.
 
 Recommended branch: `feature/account-detail-buckets`.
 
 ## Stage 8: Quick Add
 
+Status: complete for local MVP.
+
 Goal: complete the core daily workflow.
 
 Deliverables:
 
-- [ ] Add expense flow.
-- [ ] Add income flow.
-- [ ] Add transfer flow.
-- [ ] Validate amount and required accounts.
-- [ ] Validate exchange-rate requirements.
-- [ ] Remember last account, category, and currency.
-- [ ] Trigger haptic success feedback after save.
-- [ ] Refresh Dashboard and History after save.
+- [x] Add expense flow.
+- [x] Add income flow.
+- [x] Add transfer flow.
+- [x] Validate amount and required accounts.
+- [x] Validate exchange-rate requirements.
+- [x] Remember last account, category, and currency.
+- [x] Trigger haptic success feedback after save when Telegram is available.
+- [x] Refresh Dashboard and History after save.
 
 Recommended branch: `feature/quick-add`.
 
 ## Stage 9: History
 
+Status: complete for local MVP.
+
 Goal: provide a simple, trustworthy transaction ledger.
 
 Deliverables:
 
-- [ ] Group transactions by date.
-- [ ] Filter transactions by account.
-- [ ] Show transaction details compactly.
-- [ ] Confirm destructive deletion.
-- [ ] Recalculate balances after deletion.
+- [x] Group transactions by date.
+- [x] Filter transactions by account.
+- [x] Show transaction details compactly.
+- [x] Confirm destructive deletion.
+- [x] Recalculate balances after deletion.
 
 Recommended branch: `feature/transaction-history`.
 
