@@ -1,0 +1,42 @@
+:root {
+  --bg: var(--tg-theme-bg-color, #ffffff);
+  --fg: var(--tg-theme-text-color, #171717);
+  --hint: var(--tg-theme-hint-color, #71717a);
+  --section-bg: var(--tg-theme-section-bg-color, #f4f4f5);
+
+  color: var(--fg);
+  background: var(--bg);
+  font-family: Avenir, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.app {
+  display: grid;
+  gap: 8px;
+  min-height: 100vh;
+  padding: calc(20px + var(--tg-safe-area-inset-top, 0px)) 16px
+    calc(24px + var(--tg-safe-area-inset-bottom, 0px));
+}
+
+.app h1 {
+  font-size: 1.6rem;
+  margin: 0;
+}
+
+.app p {
+  color: var(--hint);
+  margin: 0;
+}
+
