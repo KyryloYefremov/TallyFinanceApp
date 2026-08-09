@@ -5,6 +5,7 @@ Thumbs.db
 # Node / TypeScript
 node_modules/
 dist/
+dist-types/
 build/
 coverage/
 .turbo/
@@ -37,4 +38,3 @@ Package.resolved
 # Temporary files
 *.swp
 *.swo
-
