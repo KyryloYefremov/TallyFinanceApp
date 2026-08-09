@@ -164,13 +164,22 @@ export function calculateAccountBalanceMinor(
 export function calculateBucketSpentMinor(
   bucket: Bucket,
   transactions: readonly Transaction[],
+  bucketCurrency: CurrencyCode,
+  rates: readonly ExchangeRate[] = [],
 ): number {
   return transactions.reduce((spent, transaction) => {
     if (transaction.type !== "expense" || transaction.bucketId !== bucket.id) {
       return spent;
     }
 
-    return spent + transaction.amountMinor;
+    return (
+      spent +
+      convertMoney(
+        createMoney(transaction.amountMinor, transaction.currency),
+        bucketCurrency,
+        rates,
+      ).amountMinor
+    );
   }, 0);
 }
 
@@ -178,8 +187,10 @@ export function calculateBucketSpentMinor(
 export function calculateBucketRemainingMinor(
   bucket: Bucket,
   transactions: readonly Transaction[],
+  bucketCurrency: CurrencyCode,
+  rates: readonly ExchangeRate[] = [],
 ): number {
-  return bucket.budgetMinor - calculateBucketSpentMinor(bucket, transactions);
+  return bucket.budgetMinor - calculateBucketSpentMinor(bucket, transactions, bucketCurrency, rates);
 }
 
 /** Converts money using direct, reverse, or CZK-routed manual exchange rates. */
@@ -227,6 +238,7 @@ export function validateTransactionDraft(
   accounts: readonly Account[],
   buckets: readonly Bucket[],
   rates: readonly ExchangeRate[],
+  transactions: readonly Transaction[] = [],
 ): void {
   if (!Number.isSafeInteger(draft.amountMinor) || draft.amountMinor <= 0) {
     throw new DomainError("Amount must be greater than zero.");
@@ -241,6 +253,8 @@ export function validateTransactionDraft(
   if (sourceAccount.currency !== draft.currency) {
     convertMoney(createMoney(draft.amountMinor, draft.currency), sourceAccount.currency, rates);
   }
+
+  assertSourceAccountCanFundDraft(draft, sourceAccount, transactions, rates);
 
   if (draft.type === "transfer") {
     const destinationAccount = accounts.find((account) => account.id === draft.destinationAccountId);
@@ -274,6 +288,28 @@ export function validateTransactionDraft(
     if (!bucket || bucket.isArchived || bucket.accountId !== sourceAccount.id) {
       throw new DomainError("Choose an active category for the selected account.");
     }
+  }
+}
+
+function assertSourceAccountCanFundDraft(
+  draft: TransactionDraft,
+  sourceAccount: Account,
+  transactions: readonly Transaction[],
+  rates: readonly ExchangeRate[],
+): void {
+  if (draft.type !== "expense" && draft.type !== "transfer") {
+    return;
+  }
+
+  const withdrawalMinor = convertMoney(
+    createMoney(draft.amountMinor, draft.currency),
+    sourceAccount.currency,
+    rates,
+  ).amountMinor;
+  const balanceMinor = calculateAccountBalanceMinor(sourceAccount, transactions, rates);
+
+  if (withdrawalMinor > balanceMinor) {
+    throw new DomainError("Insufficient account balance.");
   }
 }
 

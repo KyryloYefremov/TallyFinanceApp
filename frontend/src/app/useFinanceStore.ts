@@ -168,7 +168,13 @@ export function useFinanceStore(): FinanceStore {
       }));
     },
     createTransaction(draft) {
-      validateTransactionDraft(draft, state.accounts, state.buckets, state.exchangeRates);
+      validateTransactionDraft(
+        draft,
+        state.accounts,
+        state.buckets,
+        state.exchangeRates,
+        state.transactions,
+      );
 
       const now = new Date().toISOString();
       const sourceAccountId = draft.sourceAccountId;
