@@ -216,12 +216,3 @@ Deliverables:
 - [ ] Update docs with final commands and known limitations.
 
 Recommended branch: `chore/mvp-hardening`.
-
-## Manual Testing Fixes
-
-Status: pending.
-
-Manual testing found financial correctness and History filtering issues after
-the first local MVP. Track the active issue list, severity, source analysis, and
-planned fix branches in [AGENTS.md](../AGENTS.md). Remove each item from that
-queue in the pull request that implements and tests the fix.
